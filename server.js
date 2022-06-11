@@ -30,9 +30,38 @@ function empMenu(){
             ]
         }
     ])
-    .then(answer => {
-        switch (answer.choices{
-            
-        })
+    .then((answer) => {
+
+        switch (answer.choices) {
+            case 'View all departments':
+                viewAllDepartments();
+                break;
+            case 'View all roles':
+                viewAllRoles();
+                break;
+            case 'View all employees':
+                viewAllEmployees();
+                break;
+            case 'Add a department':
+                addDepartment();
+                break;
+            case 'Add a role':
+                addRole();
+                break;
+            case 'Add a new employee':
+                addNewEmployee();
+                break;
+            case 'Quit':
+                Quit();
+                break;
+        }
     })
-}
+};
+
+// function viewAllDepartments
+// function viewAllRoles
+// function viewAllEmployees
+// function addDepartment
+// function addRole
+// function addNewEmployee
+// function Quit
