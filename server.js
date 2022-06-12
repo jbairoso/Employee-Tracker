@@ -1,16 +1,16 @@
 //dependencies
-const inquirer = require("inquirer");
-const fs = require("fs");
-const mysql = require("mysql2");
+const inquirer = require('inquirer');
+const fs = require('fs');
+const mysql = require('mysql2');
 //get connection
-const db = require("./db/connection");
+const db = require('./db/connection');
 const { connection } = require("./db");
-const { exit } = require("process");
-require("console.table");
+const { exit } = require('process');
+require('console.table');
 
 db.connect(async function () {
   empMenu();
-})
+});
 
 //question prompts-department, roles, employees, add, exit
 function empMenu() {
@@ -75,13 +75,13 @@ function viewAllRoles() {
     console.log("You are now viewing all roles");
     console.table(res);
     empMenu();
-  })
-};
+  });
+}
 
 function viewAllEmployees() {
   const request = "SELECT * FROM roles";
   db.query(request, function (err, res) {
-    if (err) throw err;
+    if (err) throw err
     console.log("You are now viewing all employees");
     console.table(res);
     empMenu();
@@ -89,7 +89,8 @@ function viewAllEmployees() {
 };
 
 function addDepartment() {
-  inquirer.prompt([
+  inquirer
+    .prompt([
       {
         type: "input",
         name: "addDepartment",
@@ -110,36 +111,81 @@ function addDepartment() {
     })
 };
 
-function addRole(){
+function addRole() {
   inquirer.prompt([
-    {
-        type: 'input',
-        name: 'addRole',
-        message: 'Enter new role'
-        
-    },
-    {
-        type: 'input',
-        name: 'addSalary',
-        message: 'Enter new salary'
-        
-    },
-    {
-        type: 'input',
-        name: 'addId',
-        message: 'Enter new ID'
-        
-    }
- ])
+      {
+        type: "input",
+        name: "addRole",
+        message: "Enter new role",
+      },
+      {
+        type: "input",
+        name: "addSalary",
+        message: "Enter new salary",
+      },
+      {
+        type: "input",
+        name: "addId",
+        message: "Enter new ID",
+      },
+    ])
     .then(function (response) {
-        connection.query('INSERT INTO roles(title, salary, department_id) VALUES (?,?,?)',
-            [response.addRole, response.addSalary, response.addId], function (err, response) {
-                console.log(err)
-                if (err) throw err;
-                console.table(response);
-            })
-            empMenu();
+      connection.query(
+        "INSERT INTO roles(title, salary, department_id) VALUES (?,?,?)",
+        [response.addRole, response.addSalary, response.addId],
+        function (err, response) {
+          console.log(err)
+          if (err) throw err
+          console.table(response);
+        }
+      )
+      empMenu();
     })
 };
-// function addNewEmployee
-// function Quit
+
+function addNewEmployee() {
+  inquirer.prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message: "Enter employee first name.",
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message: "Enter employee last name.",
+      },
+      {
+        type: "input",
+        name: "empId",
+        message: "Enter employee ID number",
+      },
+      {
+        type: "input",
+        name: "mangId",
+        message: "Enter their managers ID",
+      },
+    ])
+    .then(function (response) {
+      connection.query(
+        "INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
+        [
+          response.firstName,
+          response.lastName,
+          response.empId,
+          response.mangId,
+        ],
+        function (err, response) {
+          console.log(err)
+          if (err) throw err
+          console.table(response);
+        }
+      )
+      empMenu();
+    })
+};
+
+function Quit() {
+  console.log("Thanks for using employee tracker, goodbye!");
+  process.exit();
+};
