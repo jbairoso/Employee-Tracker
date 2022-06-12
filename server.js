@@ -58,7 +58,16 @@ function empMenu(){
     })
 };
 
-// function viewAllDepartments
+function viewAllDepartments() {
+    const request = "SELECT * FROM roles";
+    db.query(request, function (err, res){
+        if (err) throw err;
+        console.log("You are now viewing all departments");
+        console.table(res);
+        empMenu();
+    })
+};
+
 // function viewAllRoles
 // function viewAllEmployees
 // function addDepartment
