@@ -14,8 +14,7 @@ db.connect(async function () {
 
 //question prompts-department, roles, employees, add, exit
 function empMenu() {
-  inquirer
-    .prompt([
+  inquirer.prompt([
       {
         type: "list",
         name: "choice",
@@ -90,8 +89,7 @@ function viewAllEmployees() {
 };
 
 function addDepartment() {
-  inquirer
-    .prompt([
+  inquirer.prompt([
       {
         type: "input",
         name: "addDepartment",
@@ -103,14 +101,45 @@ function addDepartment() {
         "INSERT INTO department(name) VALUES(?)",
         [response.addDepartment],
         function (err, response) {
-          console.log(err);
-          if (err) throw err;
+          console.log(err)
+          if (err) throw err
           console.log(response);
         }
       )
       empMenu();
     })
 };
-// function addRole
+
+function addRole(){
+  inquirer.prompt([
+    {
+        type: 'input',
+        name: 'addRole',
+        message: 'Enter new role'
+        
+    },
+    {
+        type: 'input',
+        name: 'addSalary',
+        message: 'Enter new salary'
+        
+    },
+    {
+        type: 'input',
+        name: 'addId',
+        message: 'Enter new ID'
+        
+    }
+ ])
+    .then(function (response) {
+        connection.query('INSERT INTO roles(title, salary, department_id) VALUES (?,?,?)',
+            [response.addRole, response.addSalary, response.addId], function (err, response) {
+                console.log(err)
+                if (err) throw err;
+                console.table(response);
+            })
+            empMenu();
+    })
+};
 // function addNewEmployee
 // function Quit
