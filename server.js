@@ -1,17 +1,16 @@
 //dependencies
 const inquirer = require("inquirer");
 const fs = require("fs");
-const mysql2 = require("mysql2");
+const mysql = require("mysql2");
 //get connection
 const db = require("./db/connection");
 const { connection } = require("./db");
 const { exit } = require("process");
-const { request } = require("http");
 require("console.table");
 
 db.connect(async function () {
   empMenu();
-});
+})
 
 //question prompts-department, roles, employees, add, exit
 function empMenu() {
@@ -56,7 +55,7 @@ function empMenu() {
         case "Quit":
           Quit();
           break;
-        }
+      }
     })
 };
 
@@ -67,8 +66,8 @@ function viewAllDepartments() {
     console.log("You are now viewing all departments");
     console.table(res);
     empMenu();
-  });
-}
+  })
+};
 
 function viewAllRoles() {
   const request = "SELECT * FROM roles";
@@ -77,8 +76,9 @@ function viewAllRoles() {
     console.log("You are now viewing all roles");
     console.table(res);
     empMenu();
-  });
-}
+  })
+};
+
 function viewAllEmployees() {
   const request = "SELECT * FROM roles";
   db.query(request, function (err, res) {
@@ -86,9 +86,31 @@ function viewAllEmployees() {
     console.log("You are now viewing all employees");
     console.table(res);
     empMenu();
-  });
-}
-// function addDepartment
+  })
+};
+
+function addDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "addDepartment",
+        message: "Enter a new department",
+      },
+    ])
+    .then(function (response) {
+      connection.query(
+        "INSERT INTO department(name) VALUES(?)",
+        [response.addDepartment],
+        function (err, response) {
+          console.log(err);
+          if (err) throw err;
+          console.log(response);
+        }
+      )
+      empMenu();
+    })
+};
 // function addRole
 // function addNewEmployee
 // function Quit
