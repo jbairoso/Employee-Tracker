@@ -3,10 +3,6 @@ const inquirer = require("inquirer");
 require("console.table");
 const db = require("./db/connection");
 
-// db.connect(async function () {
-//   empMenu();
-// });
-
 //question prompts-department, roles, employees, add, exit
 const promptUser = () => {
   inquirer
@@ -57,7 +53,7 @@ const promptUser = () => {
 }
 
 const viewAllDepartments = () => {
-  const request = "SELECT * FROM roles";
+  const request = "SELECT * FROM department";
   db.query(request, (err, res) => {
     if (err) throw err;
     console.log("You are now viewing all departments", res);
@@ -66,9 +62,7 @@ const viewAllDepartments = () => {
 }
 
 const viewAllRoles = () => {
-  const request = `SELECT role.id, role.title as role, role.salary, department.name AS department
-  FROM role
-  LEFT JOIN department ON role.department_id = department.id`;
+  const request = 'SELECT * FROM roles';
   db.query(request, (err, res) => {
     if (err) throw err;
     console.log("You are now viewing all roles", res);
@@ -77,18 +71,13 @@ const viewAllRoles = () => {
 }
 
 const viewAllEmployees = () => {
-  const request = `SELECT employee.id, employee.first_name, employee.last_name, role.title AS role, department.name AS department, role.salary,
-  IF(ISNULL(employee.manager_id)=1, 'null', CONCAT(manager.first_name, ' ', manager.last_name)) AS manager
-  FROM employee
-  LEFT JOIN role on employee.role_id = role.id
-  LEFT JOIN department on role.department_id = department.id
-  LEFT JOIN employee manager on manager.id = employee.manager_id`;
+  const request = 'SELECT * FROM employee';
   db.query(request, (err, res) => {
     if (err) throw err;
     console.log("You are now viewing all employees", res);
     promptUser();
-  });
-};
+  })
+}
 
 const addDepartment = () => {
   inquirer
@@ -114,11 +103,10 @@ const addDepartment = () => {
         if(err) throw err;
 
         if(res.length) {
-          console.log(`There is already a department call ${addDepartment}`);
+          console.log('There is already a department call ${addDepartment}');
           promptUser();
         } else {
-          const add = `INSERT INTO department(name)
-            VALUES (?)`;
+          const add = 'INSERT INTO department(name) VALUES (?)';
           db.query(add, addDepartment, (err,res) => {
             if(err) throw err;
             console.log(`Added ${addDepartment} to the database`);
@@ -171,7 +159,7 @@ const addRole = () => {
             type: 'list',
             name: 'dept',
             message: 'Which department does this role belong in?',
-            choices: deptChoice
+            choices: departmentChoice
           }
         ])
         .then(departmentAnswer =>{
@@ -184,35 +172,34 @@ const addRole = () => {
             if(err) throw err;
 
             if(res.length) {
-              console.log(`There role, salary, & id already exists`);
+              console.log('There role, salary, & id already exists');
               promptUser();
             } else {
-              const add = `INSERT INTO role(title, salary, department_id)
-                VALUES(?,?,?)`;
+              const add = 'INSERT INTO role(title, salary, department_id) VALUES(?,?,?)';
                 db.query(add, params, (err, res) => {
                 if(err) throw err;
-                console.log(`Added ${role} to the database.`);
+                console.log('Added ${role} to the database.');
                 promptUser();
               })
             }
           })
         })
       })
-    })
-  }
+   })
+}
 
-function addNewEmployee() {
+const addNewEmployee = () => {
   inquirer
     .prompt([
       {
         type: "input",
         name: "firstName",
-        message: "Enter employee first name.",
+        message: "Enter employee first name",
       },
       {
         type: "input",
         name: "lastName",
-        message: "Enter employee last name.",
+        message: "Enter employee last name",
       },
       {
         type: "input",
@@ -225,26 +212,10 @@ function addNewEmployee() {
         message: "Enter their managers ID",
       },
     ])
-    .then(function (response) {
-      connection.query(
-        "INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
-        [
-          response.firstName,
-          response.lastName,
-          response.empId,
-          response.mangId,
-        ],
-        function (err, response) {
-          console.log(err);
-          if (err) throw err;
-          console.table(response);
-        }
-      );
-      empMenu();
-    });
+    .then(employeeName => {
+      const {firstName, lastName} = employeeName;
+      promptUser;
+    })
 }
 
-function Quit() {
-  console.log("Thanks for using employee tracker, goodbye!");
-  process.exit();
-}
+promptUser();
