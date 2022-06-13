@@ -23,5 +23,8 @@
     "inquirer": "^8.2.4",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3"
+  },
+  "devDependencies": {
+    "jest": "^28.1.1"
   }
 }

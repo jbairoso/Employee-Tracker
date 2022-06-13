@@ -1,4 +1,3 @@
---to pre-populate your database
 use employees;
 
 INSERT INTO department(name)
