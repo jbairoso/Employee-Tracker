@@ -1,19 +1,15 @@
 //dependencies
 const inquirer = require('inquirer');
-const fs = require('fs');
-const mysql = require('mysql2');
-//get connection
-const db = require('./db/connection');
-const { connection } = require("./db");
-const { exit } = require('process');
 require('console.table');
+const db = require('./db/connection');
 
-db.connect(async function () {
-  empMenu();
-});
+
+// db.connect(async function () {
+//   empMenu();
+// });
 
 //question prompts-department, roles, employees, add, exit
-function empMenu() {
+const promptUser = () => {
   inquirer.prompt([
       {
         type: "list",
@@ -31,8 +27,10 @@ function empMenu() {
         ],
       },
     ])
-    .then((answer) => {
-      switch (answer.choices) {
+    .then(answer => {
+      const {choice} = answer;
+
+      switch (choice) {
         case "View all departments":
           viewAllDepartments();
           break;
@@ -54,11 +52,11 @@ function empMenu() {
         case "Quit":
           Quit();
           break;
-      }
+      };
     })
-};
+}
 
-function viewAllDepartments() {
+const viewAllDepartments = () => {
   const request = "SELECT * FROM roles";
   db.query(request, function (err, res) {
     if (err) throw err;
