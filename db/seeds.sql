@@ -14,7 +14,7 @@ VALUES
 ('Office manager', 75000, 3),
 ('Technical support executive', 99000, 4),
 ('Logistics Coordinator', 40000, 3),
-('Associate Logistics Coordinator', 35000, 3),
+('Logistics Coordinator', 35000, 3),
 ('Junior Software Engineer', 55000, 4),
 ('HR representative', 68000, 2);
 
