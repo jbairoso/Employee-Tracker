@@ -1,6 +1,6 @@
 //dependencies
 const inquirer = require("inquirer");
-require("console.table");
+const cTable = require("console.table");
 const db = require("./db/connection");
 
 //question prompts-department, roles, employees, add, exit
@@ -57,6 +57,7 @@ const viewAllDepartments = () => {
   db.query(request, (err, res) => {
     if (err) throw err;
     console.log("You are now viewing all departments", res);
+    console.table(res);
     promptUser();
   })
 }
@@ -66,6 +67,7 @@ const viewAllRoles = () => {
   db.query(request, (err, res) => {
     if (err) throw err;
     console.log("You are now viewing all roles", res);
+    console.table(res);
     promptUser();
   })
 }
@@ -75,6 +77,7 @@ const viewAllEmployees = () => {
   db.query(request, (err, res) => {
     if (err) throw err;
     console.log("You are now viewing all employees", res);
+    console.table(res);
     promptUser();
   })
 }
@@ -110,6 +113,7 @@ const addDepartment = () => {
           db.query(add, addDepartment, (err,res) => {
             if(err) throw err;
             console.log(`Added ${addDepartment} to the database`);
+            console.table(res);
             promptUser();
           })
         }
@@ -179,6 +183,7 @@ const addRole = () => {
                 db.query(add, params, (err, res) => {
                 if(err) throw err;
                 console.log('Added ${role} to the database.');
+                console.table(res);
                 promptUser();
               })
             }
@@ -214,6 +219,7 @@ const addNewEmployee = () => {
     ])
     .then(employeeName => {
       const {firstName, lastName} = employeeName;
+      console.table(res);
       promptUser;
     })
 }
