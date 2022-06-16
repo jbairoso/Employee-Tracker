@@ -150,7 +150,9 @@ const addRole = () => {
       }
     ])
     .then(roleData => {
-      const {role, salary} = roleData;
+      console.log(roleData);
+      const role = roleData.addRole;
+      const salary = roleData.addSalary;
 
       const dept = 'SELECT * FROM department';
       db.query(dept, (err, deptTable) => {
@@ -169,22 +171,23 @@ const addRole = () => {
         .then(departmentAnswer =>{
           const {dept} = departmentAnswer;
           const targetDept = deptTable.filter(deptInfo => deptInfo.name === dept);
-
-          const role = `SELECT * FROM role WHERE title = ? AND salary = ? AND department_id = ?`;
-          const params = [role, salary, targetDept[0].id];
-          db.query(role, params, (err,res) => {
+          console.log(targetDept);
+          const sql = 'SELECT * FROM roles WHERE title= ?';
+          const params = role;
+          db.query(sql, params, (err,res) => {
             if(err) throw err;
-
-            if(res.length) {
-              console.log('There role, salary, & id already exists');
+            console.log(res);
+            if(res.length === 1) {
+              console.log('Their role, salary, & id already exists');
               promptUser();
             } else {
-              const add = 'INSERT INTO role(title, salary, department_id) VALUES(?,?,?)';
-                db.query(add, params, (err, res) => {
+              const add = `INSERT INTO roles(title, salary, department_id) VALUES('${role}', ${salary}, ${targetDept[0].id})`;
+                db.query(add, (err, res) => {
                 if(err) throw err;
-                console.log('Added ${role} to the database.');
+                console.log(`Added ${role} to the database.`);
                 console.table(res);
                 promptUser();
+                
               })
             }
           })
@@ -220,8 +223,15 @@ const addNewEmployee = () => {
     .then(employeeName => {
       const {firstName, lastName} = employeeName;
       console.table(res);
-      promptUser;
+      promptUser();
     })
 }
 
+const Quit = () => {
+  console.log('Thanks for using the employee tracker!');
+  console.log('Goodbye!');
+  process.exit();
+};
+//start application
 promptUser();
+
